@@ -1,0 +1,76 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",    
+    "configurations": [        
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",  //attch will use pid, do not use it. 
+            "program": "${workspaceFolder}/u-boot", 
+            "args": [],
+            "stopAtEntry": true,   
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false,       ///  false/Mandatory for gdb debugging!!!
+
+            "logging": {/////  added manually for log
+                "moduleLoad": true,
+                //"trace": true,
+                "engineLogging": true,
+                "programOutput": true,
+                "exceptions": true,
+                //"traceResponse": true
+            },
+            "MIMode": "gdb",
+            "setupCommands": [                
+              {
+                "description": "Enable hex output",
+                "text": "-gdb-set output-radix 16"
+            },
+            {
+              "description": "Load the GDB script file",
+              "text": "file  ${workspaceFolder}/u-boot"
+            },
+            {
+                    "text": "dir .",
+                    "ignoreFailures": false
+                  },
+                  {
+                    "text": "add-auto-load-safe-path ./",
+                    "ignoreFailures": false
+                  },
+                  {
+                    "description": "Set sysroot ",
+                    "text": "set sysroot ./"
+               },
+               {
+                    "description": "Set solib",
+                    "text": "set solib-search-path ./"
+               },
+                  {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true,
+                    //"set follow-fork-mode":"child"
+                },
+                //The folowing commands are from .gdbinit
+                // This is used for Uboot relocation debug
+                {
+                  "text": "source ${workspaceFolder}/.gdbinit",
+                  "ignoreFailures": false,
+              },
+            ],
+
+      
+            ///////////"preLaunchTask": "Build and run",   ///start gdbserver in backgroud 
+            "preLaunchTask": "run",
+            /// Try NXP/gcc-9.2.0-Xarmv8-linux or aarch64-gcc7/Ubuntu18 with gdb10.2 
+            "miDebuggerPath": "${env:HOME}/usr/bin/aarch64-linux-gnu-gdb",
+            "targetArchitecture": "arm",
+            "miDebuggerServerAddress": "localhost:41234",
+            ////"sourceFileMap": {"./":"${workspaceFolder}"}
+            }
+    ]
+}
